@@ -15,7 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from django.conf.urls import include
+
+from rest_framework import routers
+from rest_framework.authtoken import views
+
 
 urlpatterns = [
+    path('api-token-auth/', views.obtain_auth_token),
+    path('api/', include('api.urls'), name='api'),
     path('admin/', admin.site.urls),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Now the server knows that the media root path is available and can query images
+
+# This path is for the token GET
+urlpatterns += [
+    path('api-auth/', include('rest_framework.urls')),
 ]
